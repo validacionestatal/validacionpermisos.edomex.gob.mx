@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validación de autenticidad del Permiso</title>
+<style>
+  :root{
+    --navy:#1c2f6b;
+    --maroon:#8f1738;
+    --gray-bg:#e9e9e9;
+    --input-bg:#efefef;
+    --input-border:#c9c9c9;
+    --help-bubble:#8f8fc7;
+    --text-dark:#1a1a1a;
+    --footer-bg:#e7e7e7;
+    --btn-gray:#9a9a9a;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    font-family:'Segoe UI', Arial, Helvetica, sans-serif;
+    background:#f2f2f2;
+    color:var(--text-dark);
+    display:flex;
+    justify-content:center;
+  }
+
+  .page{
+    width:100%;
+    max-width:640px;
+    background:#ffffff;
+    min-height:100vh;
+    box-shadow:0 0 24px rgba(0,0,0,0.08);
+  }
+
+  /* HEADER */
+  .header{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:28px 24px 22px;
+  }
+
+  .car-icon{
+    flex:0 0 auto;
+    width:90px;
+    height:auto;
+    object-fit:contain;
+  }
+
+  .header-text{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .eyebrow{
+    font-size:1.15rem;
+    color:var(--navy);
+    font-weight:400;
+    margin:0;
+  }
+
+  .title{
+    font-size:2.3rem;
+    line-height:1.08;
+    color:var(--navy);
+    font-weight:700;
+    margin:4px 0 0;
+    letter-spacing:0.2px;
+  }
+
+  /* STEP BANNER */
+  .step-banner{
+    background:var(--maroon);
+    color:#fff;
+    text-align:center;
+    padding:14px 12px 16px;
+  }
+
+  .step-banner .step-num{
+    font-size:1.4rem;
+    font-weight:600;
+    margin:0;
+  }
+
+  .step-banner .step-sub{
+    font-size:1rem;
+    font-weight:400;
+    margin:2px 0 0;
+    opacity:0.95;
+  }
+
+  /* FORM */
+  .form-wrap{
+    padding:24px 24px 8px;
+  }
+
+  .required-note{
+    font-style:italic;
+    font-size:0.95rem;
+    margin:0 0 26px;
+  }
+
+  .field{
+    margin-bottom:26px;
+  }
+
+  .field label{
+    display:block;
+    text-align:center;
+    font-size:1.4rem;
+    margin-bottom:12px;
+  }
+
+  .field label .req{
+    color:var(--text-dark);
+  }
+
+  .field-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .field-row input{
+    flex:1 1 auto;
+    height:44px;
+    border-radius:6px;
+    border:1px solid var(--input-border);
+    background:var(--input-bg);
+    padding:0 14px;
+    font-size:1rem;
+    color:#555;
+    font-family:inherit;
+  }
+
+  .field-row input::placeholder{
+    color:#9a9a9a;
+    letter-spacing:1px;
+  }
+
+  .field-row input:focus{
+    outline:2px solid var(--navy);
+    outline-offset:1px;
+    background:#fff;
+  }
+
+  .help-bubble{
+    flex:0 0 auto;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--help-bubble);
+    color:#fff;
+    border:none;
+    font-size:1rem;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-family:Georgia, serif;
+    font-style:italic;
+  }
+
+  .accept-btn{
+    width:100%;
+    height:52px;
+    border-radius:6px;
+    background:var(--gray-bg);
+    border:1px solid #cfcfcf;
+    color:#3a3a3a;
+    font-size:1.3rem;
+    font-weight:400;
+    cursor:pointer;
+    margin-top:10px;
+    font-family:inherit;
+  }
+
+  .accept-btn:hover{
+    background:#dedede;
+  }
+
+  /* AVISOS BANNER */
+  .avisos-banner{
+    background:var(--maroon);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    padding:22px 24px;
+    margin-top:28px;
+  }
+
+  .avisos-icon{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:#3a3a3a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+  }
+
+  .avisos-icon span{
+    color:var(--maroon);
+    font-family:Georgia, serif;
+    font-weight:700;
+    font-style:italic;
+    font-size:1.6rem;
+  }
+
+  .avisos-title{
+    font-size:1.7rem;
+    font-weight:400;
+    margin:0;
+  }
+
+  /* RESULTADO */
+  .result-wrap{
+    padding:16px 24px;
+  }
+
+  .result-card{
+    background:#f9f9f9;
+    border-left:6px solid var(--maroon);
+    padding:16px 20px;
+    border-radius:6px;
+    margin-top:10px;
+    font-size:0.95rem;
+    box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .result-card .field-label{
+    font-weight:600;
+    color:var(--navy);
+    display:inline-block;
+    min-width:130px;
+  }
+
+  .result-card .row{
+    padding:6px 0;
+    border-bottom:1px solid #e0e0e0;
+  }
+
+  .result-card .row:last-child{
+    border-bottom:none;
+  }
+
+  .result-card .badge{
+    display:inline-block;
+    background:var(--maroon);
+    color:#fff;
+    padding:2px 14px;
+    border-radius:20px;
+    font-size:0.8rem;
+    font-weight:600;
+    letter-spacing:0.5px;
+  }
+
+  .error-msg{
+    background:#fbe9e9;
+    border-left:6px solid #b22222;
+    padding:14px 18px;
+    border-radius:4px;
+    color:#7a1a1a;
+    font-weight:500;
+  }
+
+  /* FOOTER */
+  .footer{
+    background:var(--footer-bg);
+    padding:20px 24px 28px;
+  }
+
+  .footer p{
+    margin:0 0 18px;
+    font-size:1rem;
+    line-height:1.35;
+  }
+
+  .requisitos-btn{
+    display:block;
+    width:100%;
+    text-align:center;
+    background:var(--btn-gray);
+    color:#fff;
+    text-decoration:none;
+    padding:16px;
+    border-radius:6px;
+    font-size:1.3rem;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+  }
+
+  .requisitos-btn:hover{
+    background:#888;
+  }
+
+  /* Responsive */
+  @media (min-width:641px){
+    body{
+      background:#dcdcdc;
+      padding:32px 0;
+    }
+    .page{
+      border-radius:10px;
+      overflow:hidden;
+      min-height:auto;
+    }
+  }
+
+  @media (max-width:400px){
+    .title{font-size:1.9rem;}
+    .car-icon{width:70px;}
+    .field label{font-size:1.2rem;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img class="car-icon" src="https://i.postimg.cc/nLczwNCQ/IMG-6748.png" alt="Icono de control vehicular">
+    <div class="header-text">
+      <p class="eyebrow">Trámites en línea de Control Vehicular</p>
+      <h1 class="title">Validación de autenticidad del Permiso</h1>
+    </div>
+  </div>
+
+  <div class="step-banner">
+    <p class="step-num">Paso 1</p>
+    <p class="step-sub">Ingresar Información</p>
+  </div>
+
+  <form class="form-wrap" id="searchForm" onsubmit="return false;">
+    <p class="required-note">Los datos marcados con * son obligatorios.</p>
+
+    <div class="field">
+      <label for="folio">No. De Folio del Permiso: <span class="req">*</span></label>
+      <div class="field-row">
+        <input type="text" id="folio" name="folio" placeholder="" required>
+        <button type="button" class="help-bubble" aria-label="Ayuda folio">?</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="niv">NIV: <span class="req">*</span></label>
+      <div class="field-row">
+        <input type="text" id="niv" name="niv" placeholder="" required>
+        <button type="button" class="help-bubble" aria-label="Ayuda NIV">?</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="fecha">Fecha de expedición : <span class="req">*</span></label>
+      <div class="field-row">
+        <input type="text" id="fecha" name="fecha" placeholder="DD/MM/YYYY" maxlength="10" required>
+        <button type="button" class="help-bubble" aria-label="Ayuda fecha">?</button>
+      </div>
+    </div>
+
+    <button type="submit" class="accept-btn" id="buscarBtn">Aceptar</button>
+  </form>
+
+  <!-- Resultados -->
+  <div class="result-wrap" id="resultadoWrap">
+    <!-- Aquí se renderiza el resultado -->
+  </div>
+
+  <div class="avisos-banner">
+    <div class="avisos-icon"><span>i</span></div>
+    <p class="avisos-title">Avisos</p>
+  </div>
+
+  <div class="footer">
+    <p>* Los requisitos para este trámite se pueden consultar en el enlace de la parte derecha de esta sección:</p>
+    <button type="button" class="requisitos-btn">Requisitos</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ================================================================
+  // 1. BASE DE DATOS COMPLETA (heredada de edomex.html)
+  // ================================================================
+  const PERMISOS_DATABASE = {
+    "93000": {
+      propietario: "LÓPEZ HERNÁNDEZ, MARÍA FERNANDA",
+      marca: "TOYOTA",
+      modelo: "COROLLA",
+      año: "2021",
+      color: "GRIS METÁLICO",
+      numSerie: "1HGBH41JXMN109186",
+      numMotor: "2ZR-FE A8765432",
+      fechaExpedicion: "15/03/2024",
+      fechaFinalizacion: "14/03/2025"
+    },
+    "87123": {
+      propietario: "RAMÍREZ GÓMEZ, CARLOS ENRIQUE",
+      marca: "HONDA",
+      modelo: "CR-V",
+      año: "2023",
+      color: "AZUL MARINO",
+      numSerie: "5J6RE4H78BL023456",
+      numMotor: "K24Z7 4455667",
+      fechaExpedicion: "22/11/2023",
+      fechaFinalizacion: "21/11/2024"
+    },
+    "45678": {
+      propietario: "INDUSTRIAS DEL SUR, S.A. DE C.V.",
+      marca: "FORD",
+      modelo: "TRANSIT",
+      año: "2022",
+      color: "BLANCO",
+      numSerie: "NM0A7F7KXMW123456",
+      numMotor: "PUMA 2.2 998877",
+      fechaExpedicion: "05/01/2024",
+      fechaFinalizacion: "04/01/2025"
+    },
+    "32001": {
+      propietario: "MARTÍNEZ LUNA, ALEJANDRA",
+      marca: "NISSAN",
+      modelo: "VERSA",
+      año: "2024",
+      color: "ROJO",
+      numSerie: "3N1CN7AP2RL987654",
+      numMotor: "HR16DE 556677",
+      fechaExpedicion: "10/02/2024",
+      fechaFinalizacion: "09/02/2025"
+    },
+    "57230": {
+      propietario: "ASTRAL, S.A. DE C.V.",
+      marca: "NISSAN",
+      modelo: "VERSA",
+      año: "2024",
+      color: "ROJO",
+      numSerie: "3N1CN7AP2RL987654",
+      numMotor: "HR16DE 556677",
+      fechaExpedicion: "10/02/2024",
+      fechaFinalizacion: "09/02/2025"
+    },
+    "01013": {
+      propietario: "BBC XDE, S.A. DE C.V.",
+      marca: "NISSAN",
+      modelo: "VERSA",
+      año: "2024",
+      color: "ROJO",
+      numSerie: "3N1CN7AP2RL987654",
+      numMotor: "HR16DE 556677",
+      fechaExpedicion: "10/02/2024",
+      fechaFinalizacion: "09/02/2025"
+    },
+    "73016": {
+      propietario: "BBC XDE, S.A. DE C.V.",
+      marca: "NISSAN",
+      modelo: "TSUBAME AUSTERA",
+      año: "1995",
+      color: "VINO",
+      numSerie: "5TAYY10-002448",
+      numMotor: "GA16-71057R1",
+      fechaExpedicion: "02/05/2024",
+      fechaFinalizacion: "02/06/2025"
+    },
+    "39016": {
+      propietario: "EMILIO PEREZ BANUET",
+      marca: "ITALIKA",
+      modelo: "TC250",
+      año: "2025",
+      color: "NEGRO",
+      numSerie: "LRPK3FJDXSE005371",
+      numMotor: "RW166FMM2500017491",
+      fechaExpedicion: "04/05/2024",
+      fechaFinalizacion: "04/06/2025"
+    },
+    "74018": {
+      propietario: "JAQUELIN FLORES YSAIZ",
+      marca: "ITALIKA",
+      modelo: "FT 200",
+      año: "2026",
+      color: "NEGRO",
+      numSerie: "3SCK2HE48T1004380",
+      numMotor: "LC163FML167147Q5",
+      fechaExpedicion: "07/05/2024",
+      fechaFinalizacion: "07/06/2025"
+    },
+    "29105": {
+      propietario: "MARIEL DE MONSERRAT RODRIGUEZ PEREZ",
+      marca: "VOLKSWAGEN",
+      modelo: "TIGUAN",
+      año: "2022",
+      color: "NEGRO",
+      numSerie: "3VVHP65N1NM024917",
+      numMotor: "CZD788124",
+      fechaExpedicion: "14/05/2024",
+      fechaFinalizacion: "14/06/2025"
+    },
+    "39104": {
+      propietario: "ALEJANDRO HERNANDEZ MORALES",
+      marca: "ITALIKA",
+      modelo: "FT150 TS",
+      año: "2025",
+      color: "NEGRO",
+      numSerie: "3SCK2AET3S1026817",
+      numMotor: "LC162FMJ358549E4",
+      fechaExpedicion: "13/05/2024",
+      fechaFinalizacion: "13/06/2025"
+    },
+    "73029": {
+      propietario: "NESTOR",
+      marca: "ITALIKA",
+      modelo: "MODENA 175",
+      año: "2026",
+      color: "AZUL",
+      numSerie: "3SCK19AL4T1024339",
+      numMotor: "JN1P61QMK",
+      fechaExpedicion: "16/05/2024",
+      fechaFinalizacion: "16/06/2025"
+    },
+    "29106": {
+      propietario: "ANDRES DOROTEO SANCHEZ",
+      marca: "CHRYSLER",
+      modelo: "D350N8 C11",
+      año: "1985",
+      color: "BLANCO",
+      numSerie: "L514571",
+      numMotor: "79050",
+      fechaExpedicion: "16/05/2024",
+      fechaFinalizacion: "16/06/2025"
+    },
+    "73028": {
+      propietario: "NADIA MARGARITA ZEPEDA GUERRERO",
+      marca: "CARABELA",
+      modelo: "175",
+      año: "2024",
+      color: "ROJO/NEGRO",
+      numSerie: "3EFBBLAP2R1001577",
+      numMotor: "161QMK-AJR0708496",
+      fechaExpedicion: "18/05/.2024",
+      fechaFinalizacion: "18/06/2025"
+    },
+    "74819": {
+      propietario: "JUAN PABLO VARGAS CABRERA",
+      marca: "BENELI",
+      modelo: "TNT25N",
+      año: "2025",
+      color: "BLANCO",
+      numSerie: "ZBNN40009SBH01120",
+      numMotor: "BJ172MM-A14010009",
+      fechaExpedicion: "22/05/.2024",
+      fechaFinalizacion: "22/06/2025"
+    },
+    "48291": {
+      propietario: "LINO ERICK PACHUCA JIMENEZ",
+      marca: "HONDA",
+      modelo: "CIVIC",
+      año: "2018",
+      color: "AZUL SPORT",
+      numSerie: "19XFC1692JE603313",
+      numMotor: "L15B73049425",
+      fechaExpedicion: "26/05/.2024",
+      fechaFinalizacion: "26/06/2025"
+    },
+    "58310": {
+      propietario: "ESTELA HERNANDEZ CORTES",
+      marca: "JEEP",
+      modelo: "COMPASS LIMITED",
+      año: "2021",
+      color: "BLANCO",
+      numSerie: "3C4NJCCB5MT587967",
+      numMotor: "HECHO EN MEXICO",
+      fechaExpedicion: "26/05/.2024",
+      fechaFinalizacion: "26/06/2025"
+    },
+    "01563": {
+      propietario: "MARIA CRISTINA PEREZ ALVAREZ",
+      marca: "HONDA",
+      modelo: "CIVIC SEDAN",
+      año: "2022",
+      color: "BLANCO",
+      numSerie: "2HGFE2649NH851798",
+      numMotor: "MRA8623751H",
+      fechaExpedicion: "27/05/.2024",
+      fechaFinalizacion: "27/06/2025"
+    },
+    "72939": {
+      propietario: "GUADALUPE PAOLA GARCES MIRELES",
+      marca: "VENTO",
+      modelo: "ONIX 250",
+      año: "2026",
+      color: "NEGRO",
+      numSerie: "3MUA7GBD5T1018539",
+      numMotor: "KD26K028701",
+      fechaExpedicion: "01/06/2026",
+      fechaFinalizacion: "01/07/2026"
+    },
+    "03934": {
+      propietario: "SUSANA MORALES SILVA",
+      marca: "DODGE",
+      modelo: "NEON SEDAN",
+      año: "1998",
+      color: "ROJO",
+      numSerie: "3B3B627Y3WT294988",
+      numMotor: "HECHO EN MEXICO",
+      fechaExpedicion: "04/06/2026",
+      fechaFinalizacion: "04/07/2026"
+    },
+    "72779": {
+      propietario: "DIANA IVONNE GOMEZ CEDILLO",
+      marca: " KIA",
+      modelo: "RIO LXTM TA",
+      año: "2022",
+      color: "BLANCO",
+      numSerie: "3KPA34AC8NE471890",
+      numMotor: "GAFGNE019386",
+      fechaExpedicion: "01/06/2026",
+      fechaFinalizacion: "01/07/2026"
+    },
+    "74103": {
+      propietario: "ADRIAN GARCIA GONZALES",
+      marca: " BMW",
+      modelo: "AUTOMOVIL SEDAN",
+      año: "2001",
+      color: "GRIS",
+      numSerie: "WBAAV11011CF32674",
+      numMotor: "22689845",
+      fechaExpedicion: "05/06/2026",
+      fechaFinalizacion: "05/07/2026"
+    },
+    "39401": {
+      propietario: "JERRY ALBERTO RIVERA PEREZ",
+      marca: " JEEP",
+      modelo: "WRANGLER UNLIMITED SPORT",
+      año: "2017",
+      color: "ROJO",
+      numSerie: "1C4BJWDG6HL523257",
+      numMotor: "HECHO EN USA",
+      fechaExpedicion: "12/06/2026",
+      fechaFinalizacion: "12/07/2026"
+    },
+    "84039": {
+      propietario: "CRISTINA NAVARRETE ORTIZ",
+      marca: "VOLKSWAGEN",
+      modelo: "JETTA",
+      año: "2017",
+      color: "NEGRO",
+      numSerie: "3VWB67AJXHM270348",
+      numMotor: "HECHO EN USA",
+      fechaExpedicion: "12/06/2026",
+      fechaFinalizacion: "12/07/2026"
+    },
+    "73929": {
+      propietario: "MARIEL DE MONSERRAT RODRIGUEZ PEREZ",
+      marca: "VOLKSWAGEN",
+      modelo: "TIGUAN",
+      año: "2022",
+      color: "NEGRO",
+      numSerie: "3VVHP65N1NM024917",
+      numMotor: "CZD788124",
+      fechaExpedicion: "14/06/2026",
+      fechaFinalizacion: "14/07/2026"
+    },
+    "03856": {
+      propietario: "LUIS ALBERTO GUERRERO",
+      marca: "ITALIKA",
+      modelo: "WS",
+      año: "2019",
+      color: "VERDE",
+      numSerie: "3SCTWSEA7K1002470",
+      numMotor: "S/N",
+      fechaExpedicion: "17/06/2026",
+      fechaFinalizacion: "17/07/2026"
+    },
+    "94921": {
+      propietario: "VICTOR MANUEL MORALES CRUZ",
+      marca: "VENTO",
+      modelo: "ALPINA",
+      año: "2026",
+      color: "GRIS",
+      numSerie: "3MUAZKCD6T2011783",
+      numMotor: "KD172YMN26374224",
+      fechaExpedicion: "17/06/2026",
+      fechaFinalizacion: "17/07/2026"
+    },
+    "03931": {
+      propietario: "GERARDO PATRICIO HERNANDEZ RUIZ",
+      marca: "MAZDA",
+      modelo: "GRAND TOURING",
+      año: "2016",
+      color: "AZUL MARINO",
+      numSerie: "3MDDJADV3GM104860",
+      numMotor: "1.5",
+      fechaExpedicion: "18/06/2026",
+      fechaFinalizacion: "18/07/2026"
+    },
+    "28293": {
+      propietario: "JUAN DEL MORAL HERNANDEZ",
+      marca: "ITALIKA",
+      modelo: "WS175 SPORT",
+      año: "2025",
+      color: "NEGRO/AZUL",
+      numSerie: "3SCK1CAV7S1027510",
+      numMotor: "S/N",
+      fechaExpedicion: "21/06/2026",
+      fechaFinalizacion: "21/07/2026"
+    },
+    "74829": {
+      propietario: "FRANCISCO EMMANUEL MEDINA VERDE",
+      marca: "ITALIKA",
+      modelo: "MOTOCICLETA",
+      año: "2023",
+      color: "AZUL",
+      numSerie: "3SCK59LA0P1011965",
+      numMotor: "LC157FMIVE181842",
+      fechaExpedicion: "25/06/2026",
+      fechaFinalizacion: "25/07/2026"
+    },
+    "08471": {
+      propietario: "CARLOS GIL HERNANDEZ",
+      marca: "FORD",
+      modelo: "EXPLORER",
+      año: "1993",
+      color: "NEGRO",
+      numSerie: "1FMDU32X3PUA77025",
+      numMotor: "S/N",
+      fechaExpedicion: "29/06/2026",
+      fechaFinalizacion: "29/07/2026"
+    },
+    "02841": {
+      propietario: "MARIA CRISTINA PEREZ ALVAREZ",
+      marca: "HONDA",
+      modelo: "CIVIC",
+      año: "2022",
+      color: "BLANCO",
+      numSerie: "2HGFE2649NH851798",
+      numMotor: "MRA8623751H",
+      fechaExpedicion: "28/06/2026",
+      fechaFinalizacion: "28/07/2026"
+    },
+    "94027": {
+      propietario: "IRVING AGUSTIN VALENCIA ROBLES",
+      marca: "ITALIKA",
+      modelo: "FT 150",
+      año: "2021",
+      color: "GRAFITO",
+      numSerie: "3SCK2AEN8M1055072",
+      numMotor: "LC162FMJAUE034389",
+      fechaExpedicion: "03/07/2026",
+      fechaFinalizacion: "03/08/2026"
+    },
+    "05891": {
+      propietario: "ZAID ARMENTA ROCHA",
+      marca: "VENTO",
+      modelo: "SCREAMER",
+      año: "2024",
+      color: "GRIS",
+      numSerie: "3MUAVKCD6R1006030",
+      numMotor: "KD24F000593",
+      fechaExpedicion: "16/07/2026",
+      fechaFinalizacion: "16/08/2026"
+    },
+    "34912": {
+      propietario: "JUAN RAMON GUZMAN BALCAZAR",
+      marca: "CHEVROLET ",
+      modelo: "ONIX",
+      año: "2024",
+      color: "AZUL",
+      numSerie: "3G1MA5E2XML127376",
+      numMotor: "HECHO EN MEXICO",
+      fechaExpedicion: "17/07/2026",
+      fechaFinalizacion: "17/08/2026"
+    },
+    "85929": {
+      propietario: "JUAN CARLOS VERA MONTUFAR",
+      marca: "FORD ",
+      modelo: "EXPLORER",
+      año: "2013",
+      color: "GRIS OXFORD",
+      numSerie: "1FM5K7D88DGB99087",
+      numMotor: "S/N",
+      fechaExpedicion: "20/07/2026",
+      fechaFinalizacion: "20/08/2026"
+    },
+    "04817": {
+      propietario: "ALBERTO SANTOYO VALTIERRA",
+      marca: "VENTO",
+      modelo: "NITROX T3 250",
+      año: "2026",
+      color: "VERDE",
+      numSerie: "3MUBRGBD6T1667703",
+      numMotor: "169FMM2TB038205",
+      fechaExpedicion: "22/07/2026",
+      fechaFinalizacion: "22/08/2026"
+    },
+    "57189": {
+      propietario: "ANTONIO ESCAMILLA HERNANDEZ",
+      marca: "GML",
+      modelo: "JAC4 ACTIVEN",
+      año: "2027",
+      color: "GRIS",
+      numSerie: "3GABAC224VM009013",
+      numMotor: "T3316459",
+      fechaExpedicion: "25/07/2026",
+      fechaFinalizacion: "25/08/2026"
+    },
+    "27591": {
+      propietario: "LUIS ROJAS SIERRA",
+      marca: "NISSAN",
+      modelo: "QUEST",
+      año: "2011",
+      color: "GRIS APERLADO",
+      numSerie: "JN8AE2KP289010608",
+      numMotor: "HECHO EN USA",
+      fechaExpedicion: "26/07/2026",
+      fechaFinalizacion: "26/08/2026"
+    },
+    "96836": {
+      propietario: "CESAR AURELIO OIDOR AVENDAÑO",
+      marca: "FORD",
+      modelo: "F-150",
+      año: "1986",
+      color: "ROJO",
+      numSerie: "-AC2LDS63302-J2H",
+      numMotor: "S/N",
+      fechaExpedicion: "29/07/2026",
+      fechaFinalizacion: "29/08/2026"
+    },
+     "50924": {
+      propietario: "YOSHIO REYES SANCHEZ",
+      marca: "VENTO",
+      modelo: "ROCKETMAN 250",
+      año: "2023",
+      color: "GRIS",
+      numSerie: "3MUAEGBD8P1314375",
+      numMotor: "KD166FMM23493941",
+      fechaExpedicion: "30/07/2026",
+      fechaFinalizacion: "30/08/2026"
+    },
+     "95048": {
+      propietario: "JONATAN RICARDO GONZALEZ SANCHEZ",
+      marca: "ITALIKA",
+      modelo: "RT 200",
+      año: "2024",
+      color: "NEGRO",
+      numSerie: "3SCK5ELE6R1003965",
+      numMotor: "LC163FML285129Q3",
+      fechaExpedicion: "03/08/2026",
+      fechaFinalizacion: "03/09/2026"
+    },
+        "08455": {
+      propietario: "OMAR IBARRA RODRIGUEZ",
+      marca: "ITALIKA",
+      modelo: "2026",
+      año: "2026",
+      color: "NEGRO/AZUL",
+      numSerie: "3GNAL3EK8ES582623",
+      numMotor: "LCKSHJKDS344",
+      fechaExpedicion: "04/08/2026",
+      fechaFinalizacion: "04/09/2026"
+    },
+       "36241": {
+      propietario: "PEDRO LOPEZ ARREGUIN",
+      marca: "CHEVROLET",
+      modelo: "CHEVY",
+      año: "2009",
+      color: "DORADO METALICO",
+      numSerie: "3G1SF61X29S122640",
+      numMotor: "S/N",
+      fechaExpedicion: "06/08/2026",
+      fechaFinalizacion: "06/09/2026"
+    },
+      "90938": {
+      propietario: "LIZBETH PACHECO MONTIEL",
+      marca: "JETTA",
+      modelo: "TELA A 3",
+      año: "1995",
+      color: "AZUL",
+      numSerie: "3VW1671HMSM215266",
+      numMotor: "ADC093971",
+      fechaExpedicion: "07/08/2026",
+      fechaFinalizacion: "07/09/2026"
+    },
+     "34023": {
+      propietario: "CARLOS WENCESLAO HERNANDEZ AYALA",
+      marca: "FORD",
+      modelo: "FREESTAR",
+      año: "2005",
+      color: "VERDE CONIFERA",
+      numSerie: "2FMDA58285BA64807",
+      numMotor: "S/N",
+      fechaExpedicion: "07/08/2026",
+      fechaFinalizacion: "07/09/2026"
+    },
+      "57409": {
+      propietario: "CARLOS WENCESLAO HERNANDEZ AYALA",
+      marca: "JEEP",
+      modelo: "COMPASS",
+      año: "2026",
+      color: "NEGRO CARBON",
+      numSerie: "988675429TKW28807",
+      numMotor: "HECHO EN BRASIL",
+      fechaExpedicion: "09/08/2026",
+      fechaFinalizacion: "09/09/2026"
+    },
+      "05819": {
+      propietario: "JOSE MARTIN VITAL LOPEZ",
+      marca: "VENTO",
+      modelo: "THUNDERSTAR",
+      año: "2026",
+      color: "NEGRO",
+      numSerie: "3MUAFKCD3T1318407",
+      numMotor: "KD26F035379",
+      fechaExpedicion: "12/08/2026",
+      fechaFinalizacion: "12/09/2026"
+    },
+    "86097": {
+      propietario: "CESAR HUMBERTO LEAL CUENCA",
+      marca: "MG",
+      modelo: "2025",
+      año: "2025",
+      color: "BLANCO",
+      numSerie: "LSJWP4U95SZ025348",
+      numMotor: "15FGC01ZR3143183",
+      fechaExpedicion: "13/08/2026",
+      fechaFinalizacion: "13/09/2026"
+    },
+    "63868": {
+      propietario: "MIGUEL ANGEL MUÑOZ CASTILLO",
+      marca: "CHEVROLET",
+      modelo: "2018",
+      año: "2018",
+      color: "BLANCO",
+      numSerie: "3GNCJKSB2L418074",
+      numMotor: "S/N",
+      fechaExpedicion: "13/08/2026",
+      fechaFinalizacion: "13/09/2026"
+    },
+     "63868": {
+      propietario: "MIGUEL ANGEL MUÑOZ CASTILLO",
+      marca: "CHEVROLET",
+      modelo: "2018",
+      año: "2018",
+      color: "BLANCO",
+      numSerie: "3GNCJKSB2L418074",
+      numMotor: "S/N",
+      fechaExpedicion: "13/08/2026",
+      fechaFinalizacion: "13/09/2026"
+    },
+     "30194": {
+      propietario: "MARTIN ISAI GONZALEZ ESTRADA",
+      marca: "CHEVROLET",
+      modelo: "TRAVERSE",
+      año: "2014",
+      color: "PLATA BRILLANTE",
+      numSerie: "1GNKR8KD0EJ349925",
+      numMotor: "IMPORTADO",
+      fechaExpedicion: "14/08/2026",
+      fechaFinalizacion: "14/09/2026"
+    },
+     "94018": {
+      propietario: "HÉCTOR DANIEL RAMÍREZ RANGEL",
+      marca: "VENTO",
+      modelo: "CROSSMAX 220",
+      año: "2026",
+      color: "NEGRO",
+      numSerie: "3MUCCLBD2T101434",
+      numMotor: "163FML3106882",
+      fechaExpedicion: "15/08/2026",
+      fechaFinalizacion: "15/09/2026"
+    },
+     "95831": {
+      propietario: "EDUARDO YÁÑEZ ARTISTA",
+      marca: "RENAULT",
+      modelo: "SANDERO ",
+      año: "2017",
+      color: "NEGRO",
+      numSerie: "93Y566HC6HJ596226",
+      numMotor: "S/N",
+      fechaExpedicion: "16/08/2026",
+      fechaFinalizacion: "16/09/2026"
+    },
+     "94017": {
+      propietario: "FRANCISCO JAVIER OJEDA OSORIO",
+      marca: "ITALIKA",
+      modelo: "TC 250",
+      año: "2024",
+      color: "NEGRO",
+      numSerie: "LRPK3FJD7RE020985",
+      numMotor: "RW166FMM2400018675",
+      fechaExpedicion: "18/08/2026",
+      fechaFinalizacion: "18/09/2026"
+    },
+     "58193": {
+      propietario: "JESUS FLORES LOPEZ",
+      marca: "VENTO",
+      modelo: "TORNADO 300",
+      año: "2026",
+      color: "ROJO",
+      numSerie: "3MUAAKCD1T1323250",
+      numMotor: "KD26F032205",
+      fechaExpedicion: "20/08/2026",
+      fechaFinalizacion: "20/09/2026"
+    },
+     "79053": {
+      propietario: "MIGUEL ANGEL FLORES ALTAMIRANO",
+      marca: "ITALIKA",
+      modelo: "WS SPORT",
+      año: "2026",
+      color: "MARINO",
+      numSerie: "3SCK16AU5T1016208",
+      numMotor: "LC157QMJS5047632",
+      fechaExpedicion: "21/08/2026",
+      fechaFinalizacion: "21/09/2026"
+    },
+    "36368": {
+      propietario: "JUAN CARLOS VERA MONTUFAR",
+      marca: "FORD ",
+      modelo: "2013",
+      año: "2013",
+      color: "GRIS OXFORD ",
+      numSerie: "1FM5K7D88DGB99087",
+      numMotor: "S/N",
+      fechaExpedicion: "22/08/2026",
+      fechaFinalizacion: "20/09/2026"
+    },
+      "05921": {
+      propietario: "ENRIQUE OLVERA RAMIREZ",
+      marca: "DODGE",
+      modelo: "GRAND CARAVAN",
+      año: "2001",
+      color: "GRIS OSCURO ",
+      numSerie: "2B4GP44341R378963",
+      numMotor: "S/N",
+      fechaExpedicion: "23/08/2026",
+      fechaFinalizacion: "23/09/2026"
+    },
+       "94092": {
+      propietario: "MIGUEL ANGEL VILLEGAS RODRIGUEZ",
+      marca: "VENTO",
+      modelo: "STORM 250",
+      año: "2024",
+      color: "NEGRO",
+      numSerie: "3MUASGCD6R1005997",
+      numMotor: "KD166FMM24304992",
+      fechaExpedicion: "23/08/2026",
+      fechaFinalizacion: "23/09/2026"
+    },
+       "85828": {
+      propietario: "JORGE GUTIERREZ DIAZ",
+      marca: "VOLKSWAGEN",
+      modelo: "POINTER",
+      año: "2005",
+      color: "AZUL",
+      numSerie: "9BWCC05X95P121849",
+      numMotor: "BHG122075",
+      fechaExpedicion: "24/08/2026",
+      fechaFinalizacion: "24/09/2026"
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  };
+
+  // ================================================================
+  // 2. ELEMENTOS DOM
+  // ================================================================
+  const inputFolio = document.getElementById('folio');
+  const inputNiv = document.getElementById('niv');
+  const inputFecha = document.getElementById('fecha');
+  const btnBuscar = document.getElementById('buscarBtn');
+  const resultadoWrap = document.getElementById('resultadoWrap');
+
+  // ================================================================
+  // 3. FORMATO AUTOMÁTICO DE FECHA (SOLO NÚMEROS → DD/MM/YYYY)
+  // ================================================================
+  function formatFecha(value) {
+    // Eliminar todo lo que no sea número
+    let clean = value.replace(/\D/g, '');
+    
+    // Limitar a 8 dígitos (DDMMYYYY)
+    if (clean.length > 8) {
+      clean = clean.slice(0, 8);
+    }
+    
+    // Aplicar formato DD/MM/YYYY
+    let formatted = '';
+    for (let i = 0; i < clean.length; i++) {
+      if (i === 2 || i === 4) {
+        formatted += '/';
+      }
+      formatted += clean[i];
+    }
+    
+    return formatted;
+  }
+
+  inputFecha.addEventListener('input', function(e) {
+    const cursorPos = this.selectionStart;
+    const rawValue = this.value;
+    
+    // Guardar posición del cursor antes del formato
+    const oldLength = rawValue.length;
+    
+    // Aplicar formato
+    const formatted = formatFecha(rawValue);
+    this.value = formatted;
+    
+    // Ajustar posición del cursor
+    const newLength = formatted.length;
+    let newCursorPos = cursorPos;
+    
+    // Si se agregó una barra, mover el cursor un paso adelante
+    if (newLength > oldLength) {
+      // Detectar si se agregó una barra en la posición del cursor
+      for (let i = 0; i < newLength; i++) {
+        if (i < oldLength && rawValue[i] !== formatted[i]) {
+          // Se agregó un carácter (posiblemente una barra)
+          newCursorPos = cursorPos + 1;
+          break;
+        }
+      }
+    } else if (newLength < oldLength) {
+      // Si se eliminó un carácter, ajustar hacia atrás
+      newCursorPos = cursorPos - 1;
+    }
+    
+    // Asegurar que el cursor esté dentro de los límites
+    if (newCursorPos < 0) newCursorPos = 0;
+    if (newCursorPos > formatted.length) newCursorPos = formatted.length;
+    
+    this.setSelectionRange(newCursorPos, newCursorPos);
+  });
+
+  // También permitir que el usuario pueda borrar y editar cómodamente
+  inputFecha.addEventListener('keydown', function(e) {
+    // Permitir teclas de control (backspace, delete, flechas, etc.)
+    const controlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Tab'];
+    if (controlKeys.includes(e.key)) {
+      return; // Dejar que el input maneje estas teclas normalmente
+    }
+    
+    // Si es una tecla numérica o de control, permitir
+    if (!/^\d$/.test(e.key) && e.key !== 'Enter') {
+      e.preventDefault();
+    }
+  });
+
+  // ================================================================
+  // 4. FUNCIÓN DE BÚSQUEDA MULTICRITERIO
+  // ================================================================
+  function buscarPermiso() {
+    const folio = inputFolio.value.trim();
+    const niv = inputNiv.value.trim().toUpperCase();
+    let fecha = inputFecha.value.trim();
+
+    // Validar campos obligatorios
+    if (!folio || !niv || !fecha) {
+      resultadoWrap.innerHTML = `
+        <div class="result-card error-msg">
+          <strong>⚠️ TODOS LOS CAMPOS SON OBLIGATORIOS</strong><br>
+          <span style="font-size:0.9rem;">Complete el Folio, NIV y Fecha de expedición para continuar.</span>
+        </div>
+      `;
+      return;
+    }
+
+    // Buscar primero por folio
+    let permiso = PERMISOS_DATABASE[folio];
+
+    if (!permiso) {
+      resultadoWrap.innerHTML = `
+        <div class="result-card error-msg">
+          <strong>❌ PERMISO NO REGISTRADO</strong><br>
+          <span style="font-size:0.9rem;">El folio <strong>${folio}</strong> no existe en la base de datos.</span>
+        </div>
+      `;
+      return;
+    }
+
+    // Validar coincidencia de NIV (case insensitive, ya está en mayúsculas)
+    const nivDB = permiso.numSerie.toUpperCase();
+    if (nivDB !== niv) {
+      resultadoWrap.innerHTML = `
+        <div class="result-card error-msg">
+          <strong>❌ NIV NO COINCIDE</strong><br>
+          <span style="font-size:0.9rem;">El NIV ingresado no corresponde al folio <strong>${folio}</strong>.</span>
+        </div>
+      `;
+      return;
+    }
+
+    // Validar coincidencia de fecha de expedición (normalizar formato)
+    const fechaDB = permiso.fechaExpedicion.trim();
+    // Limpiar posibles caracteres extraños en la fecha (ej: "18/05/.2024" -> "18/05/2024")
+    const fechaDBLimpia = fechaDB.replace(/\./g, '/').replace(/\/\//g, '/');
+    const fechaInputLimpia = fecha.replace(/\./g, '/').replace(/\/\//g, '/');
+
+    if (fechaDBLimpia !== fechaInputLimpia) {
+      resultadoWrap.innerHTML = `
+        <div class="result-card error-msg">
+          <strong>❌ FECHA DE EXPEDICIÓN NO COINCIDE</strong><br>
+          <span style="font-size:0.9rem;">La fecha ingresada no corresponde al folio <strong>${folio}</strong>.<br>
+          Fecha registrada: <strong>${fechaDB}</strong></span>
+        </div>
+      `;
+      return;
+    }
+
+    // ======== TODOS LOS DATOS COINCIDEN: MOSTRAR RESULTADO ========
+    resultadoWrap.innerHTML = `
+      <div class="result-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+          <span style="font-weight:700; font-size:1.1rem; color:var(--navy);">✅ PERMISO VIGENTE</span>
+          <span class="badge">FOLIO: ${folio}</span>
+        </div>
+        <div class="row"><span class="field-label">Propietario:</span> ${permiso.propietario}</div>
+        <div class="row"><span class="field-label">Marca:</span> ${permiso.marca}</div>
+        <div class="row"><span class="field-label">Modelo:</span> ${permiso.modelo}</div>
+        <div class="row"><span class="field-label">Año:</span> ${permiso.año}</div>
+        <div class="row"><span class="field-label">Color:</span> ${permiso.color}</div>
+        <div class="row"><span class="field-label">NIV:</span> ${permiso.numSerie}</div>
+        <div class="row"><span class="field-label">Núm. Motor:</span> ${permiso.numMotor}</div>
+        <div class="row"><span class="field-label">Fecha Expedición:</span> ${permiso.fechaExpedicion}</div>
+        <div class="row"><span class="field-label">Fecha Finalización:</span> ${permiso.fechaFinalizacion}</div>
+        <div style="margin-top:12px; padding-top:10px; border-top:2px solid var(--maroon); text-align:center; font-size:0.75rem; color:#666; text-transform:uppercase; letter-spacing:1px;">
+          SISTEMA DE VERIFICACIÓN VEHICULAR · GOBIERNO
+        </div>
+      </div>
+    `;
+  }
+
+  // ================================================================
+  // 5. EVENTOS
+  // ================================================================
+  btnBuscar.addEventListener('click', function(e) {
+    e.preventDefault();
+    buscarPermiso();
+  });
+
+  // Presionar Enter en cualquier campo ejecuta la búsqueda
+  [inputFolio, inputNiv, inputFecha].forEach(input => {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        buscarPermiso();
+      }
+    });
+  });
+
+  // ================================================================
+  // 6. MENSAJE INICIAL
+  // ================================================================
+  resultadoWrap.innerHTML = `
+    <div class="result-card" style="background:#f3f3f3; border-left-color:#8f8fc7; color:#555;">
+      <span style="font-weight:400;">Ingrese el Folio, NIV y Fecha de expedición para validar el permiso.</span>
+    </div>
+  `;
+
+})();
+</script>
+</body>
+</html>
